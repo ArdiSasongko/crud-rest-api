@@ -3,6 +3,7 @@ package main
 import (
 	"golang-rest-api/app"
 	"golang-rest-api/controller"
+	"golang-rest-api/execption"
 	"golang-rest-api/helper"
 	"golang-rest-api/repository"
 	"golang-rest-api/service"
@@ -28,6 +29,8 @@ func main() {
 	router.PUT("/api/categories/:categoryId", categoryController.Update)
 	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
 	router.POST("/api/categories", categoryController.Create)
+
+	router.PanicHandler = execption.ErrorHandler
 
 	server := http.Server{
 		Addr:    "localhost:3000",

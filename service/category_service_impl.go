@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"golang-rest-api/execption"
 	"golang-rest-api/helper"
 	"golang-rest-api/model/domain"
 	"golang-rest-api/model/web"
@@ -51,7 +52,9 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 	defer helper.RollbackOrCommit(tx)
 
 	category, err := service.CategoryRepository.FindByID(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(execption.NewNotFoundError(err.Error()))
+	}
 
 	category.Name = request.Name
 
@@ -66,7 +69,9 @@ func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int) 
 	defer helper.RollbackOrCommit(tx)
 
 	category, err := service.CategoryRepository.FindByID(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(execption.NewNotFoundError(err.Error()))
+	}
 
 	service.CategoryRepository.Delete(ctx, tx, category.Id)
 }
@@ -77,7 +82,9 @@ func (service *CategoryServiceImpl) FindById(ctx context.Context, categoryId int
 	defer helper.RollbackOrCommit(tx)
 
 	category, err := service.CategoryRepository.FindByID(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(execption.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToCategoryResponse(category)
 }
